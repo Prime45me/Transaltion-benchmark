@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "description": "Standardized glossary of approved Akan names, kinship terms, and cultural concepts for the Twi Translation Benchmark Lab.",
+  "terms": {
+    "Ama": "Akan female day-name for Saturday-born girl; main protagonist",
+    "Nana Adwoa": "Respected grandmother and elder matriarch",
+    "Kofi": "Akan male day-name for Friday-born boy",
+    "Abena": "Akan female day-name for Tuesday-born girl",
+    "Kweku": "Akan male day-name for Wednesday-born boy",
+    "Opanyin Mensah": "Village elder and esteemed neighbor",
+    "Maame Efua": "Respected female elder and great-aunt",
+    "Mr. Asante": "Village primary school instructor",
+    "Yaa": "Akan female day-name for Thursday-born girl",
+    "Esi": "Akan female day-name for Sunday-born girl",
+    "Adwoa": "Akan female day-name for Monday-born girl",
+    "Akua": "Akan female day-name for Wednesday-born girl",
+    "odum": "Large native sacred hardwood tree (Milicia excelsa) used as community gathering point",
+    "chief's palace": "Ahenfie; traditional administrative seat and residence of the local ruler",
+    "elders": "Mpanimfoɔ; council of venerable community leaders and advisers"
+  }
+}

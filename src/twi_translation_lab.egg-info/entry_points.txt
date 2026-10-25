@@ -1,0 +1,3 @@
+[console_scripts]
+twi-run = twi_lab.runner:cli
+twi-validate = twi_lab.dataset:cli

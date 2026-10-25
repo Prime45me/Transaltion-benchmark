@@ -1,0 +1,13 @@
+pydantic<3.0.0,>=2.7.0
+pydantic-settings<3.0.0,>=2.2.0
+
+[dev]
+pytest<9.0.0,>=8.0.0
+
+[phase2]
+requests<3.0.0,>=2.31.0
+
+[phase2-opus]
+transformers<5.0.0,>=4.40.0
+sentencepiece>=0.1.99
+torch>=2.0.0

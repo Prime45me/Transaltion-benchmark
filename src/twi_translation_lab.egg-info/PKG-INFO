@@ -1,0 +1,441 @@
+Metadata-Version: 2.4
+Name: twi-translation-lab
+Version: 0.1.0
+Summary: Asante Twi Translation Benchmark Lab for children's stories
+Author: Translation Research Team
+License: MIT
+Keywords: machine-translation,twi,asante-twi,benchmark,nlp
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic<3.0.0,>=2.7.0
+Requires-Dist: pydantic-settings<3.0.0,>=2.2.0
+Provides-Extra: dev
+Requires-Dist: pytest<9.0.0,>=8.0.0; extra == "dev"
+Provides-Extra: phase2
+Requires-Dist: requests<3.0.0,>=2.31.0; extra == "phase2"
+Provides-Extra: phase2-opus
+Requires-Dist: transformers<5.0.0,>=4.40.0; extra == "phase2-opus"
+Requires-Dist: sentencepiece>=0.1.99; extra == "phase2-opus"
+Requires-Dist: torch>=2.0.0; extra == "phase2-opus"
+
+# Twi Translation Benchmark Lab
+
+An independent research tool for comparing English-to-Asante Twi translation engines on children's story content. The lab evaluates translation quality, cultural faithfulness, and child-friendliness using human reviewer judgements and structured linguistic benchmarks.
+
+> **Phase 1 — Foundation and Dataset.**  
+> Translation does not happen yet. This phase establishes the data contracts, dataset, validation tooling, and architecture needed for Phases 2–5.
+
+---
+
+## Table of Contents
+
+1. [Project Purpose and Scope](#1-project-purpose-and-scope)
+2. [Five-Phase Roadmap](#2-five-phase-roadmap)
+3. [Prerequisites](#3-prerequisites)
+4. [Virtual Environment Setup](#4-virtual-environment-setup)
+5. [Dependency Installation](#5-dependency-installation)
+6. [Configuration](#6-configuration)
+7. [Directory Structure](#7-directory-structure)
+8. [Dataset Schema](#8-dataset-schema)
+9. [Adding a New Sample Passage](#9-adding-a-new-sample-passage)
+10. [Validating the Dataset](#10-validating-the-dataset)
+11. [Running Tests](#11-running-tests)
+12. [Current Limitations](#12-current-limitations)
+13. [What is Postponed to Phase 2](#13-what-is-postponed-to-phase-2)
+14. [Quality and Research Principles](#14-quality-and-research-principles)
+
+---
+
+## 1. Project Purpose and Scope
+
+This lab compares translation engines to determine which produces the most accurate, natural, contextually appropriate, culturally faithful, and child-friendly Asante Twi translations for children's stories.
+
+**Initial engines:**
+- **OPUS-MT** — runs locally, no API key required.
+- **Khaya** — cloud translation API, requires a key (Phase 2).
+
+Human narrators and qualified Asante Twi reviewers evaluate translations. Their corrections and judgements help the content team decide which translation is suitable for review and eventual publication.
+
+**This is an experimental evaluation tool.** It is not the production storytelling application, payment system, parent account system, or public translation service.
+
+---
+
+## 2. Five-Phase Roadmap
+
+| Phase | Title | Status |
+|-------|-------|--------|
+| **1** | Foundation, dataset, and infrastructure | ✅ Complete |
+| **2** | Translation engines (OPUS-MT + Khaya) | 🔲 Not started |
+| **3** | Context experiments | 🔲 Not started |
+| **4** | Shared human review workspace | 🔲 Not started |
+| **5** | Analysis and reporting | 🔲 Not started |
+
+See [`docs/deployment_architecture.md`](docs/deployment_architecture.md) for the planned hosted review interface architecture.
+
+---
+
+## 3. Prerequisites
+
+| Requirement | Notes |
+|-------------|-------|
+| Python 3.10+ | 3.12 recommended. Check: `python --version` |
+| Git | For version control |
+| Internet access | Only needed for pip install and Phase 2+ Khaya API |
+| GPU | **Not required.** CPU-only inference is the default. |
+
+No Docker, Kubernetes, Redis, or remote database is required for Phase 1 or 2.
+
+---
+
+## 4. Virtual Environment Setup
+
+### Windows PowerShell
+
+```powershell
+cd C:\Users\user\Desktop\Translaton-benchmark
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+### Windows Command Prompt
+
+```cmd
+cd C:\Users\user\Desktop\Translaton-benchmark
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+### Linux / macOS
+
+```bash
+cd ~/path/to/Translaton-benchmark
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+---
+
+## 5. Dependency Installation
+
+Install the package in editable mode with development dependencies:
+
+```bash
+pip install -e ".[dev]"
+```
+
+Phase 1 dependencies:
+- `pydantic>=2.7.0,<3.0.0` — data validation and schema enforcement
+- `pydantic-settings>=2.2.0,<3.0.0` — environment variable configuration
+- `pytest>=8.0.0,<9.0.0` — automated tests (dev only)
+
+Phase 2 dependencies (not installed yet):
+- `requests>=2.31.0` — HTTP client for Khaya API
+
+Model weights (OPUS-MT) are **not downloaded in Phase 1**.
+
+---
+
+## 6. Configuration
+
+Copy the example file and adjust values for your environment:
+
+```bash
+# Windows
+copy .env.example .env
+
+# Linux / macOS
+cp .env.example .env
+```
+
+Edit `.env` as needed. The file is excluded from version control by `.gitignore`.  
+**Never commit real API keys.**
+
+### Available configuration keys
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `PROJECT_ENV` | `development` | `development`, `testing`, or `production` |
+| `LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
+| `DATASET_PATH` | `data/samples/passages.jsonl` | Path to passages JSONL |
+| `MANIFEST_PATH` | `data/samples/manifest.json` | Path to dataset manifest |
+| `RESULTS_DIR` | `results` | Where experiment results are stored |
+| `LOGS_DIR` | `logs` | Where log files are written |
+| `KHAYA_API_KEY` | *(none)* | **Phase 2 only.** Not required for Phase 1. |
+| `KHAYA_API_BASE_URL` | `https://api.khaya.ai/v1` | Khaya endpoint |
+| `OPUS_MT_MODEL_NAME` | `Helsinki-NLP/opus-mt-en-tw` | HuggingFace model ID |
+| `OPUS_MT_MODEL_DIR` | `models/opus-mt-en-tw` | Local model cache directory |
+| `LOCAL_DEVICE` | `cpu` | `cpu` or `cuda` |
+
+---
+
+## 7. Directory Structure
+
+```
+Translaton-benchmark/
+├── data/
+│   ├── samples/
+│   │   ├── passages.jsonl       # Benchmark passages (JSONL, one record per line)
+│   │   └── manifest.json        # Dataset provenance and coverage metadata
+│   └── references/
+│       └── .gitkeep             # Reserved for human reference translations
+├── docs/
+│   └── deployment_architecture.md  # Shared review interface design (Phase 4)
+├── src/
+│   └── twi_lab/
+│       ├── __init__.py          # Package marker
+│       ├── config.py            # Settings and environment configuration
+│       ├── dataset.py           # JSONL loader, validator, CLI entry point
+│       ├── logging_config.py    # Structured logging with secret redaction
+│       └── schemas.py           # Pydantic data contracts for all phases
+├── tests/
+│   ├── __init__.py
+│   ├── test_config.py           # Configuration and path resolution tests
+│   ├── test_dataset.py          # Dataset loading, validation, and CLI tests
+│   └── test_schemas.py          # Schema acceptance and rejection tests
+├── results/
+│   └── .gitkeep                 # Experiment results (gitignored)
+├── .env.example                 # Configuration template (safe to commit)
+├── .gitignore
+├── pyproject.toml
+└── README.md
+```
+
+### What is committed vs. gitignored
+
+| Path | Committed? | Reason |
+|------|-----------|--------|
+| `data/samples/` | ✅ Yes | Source benchmark data is a tracked asset |
+| `data/references/` | ✅ Yes | Human-reviewed reference translations (when added) |
+| `results/` | ❌ No | Generated experiment outputs (transient) |
+| `logs/` | ❌ No | Application logs (transient) |
+| `models/` | ❌ No | Downloaded model weights (large, reproducible) |
+| `.env` | ❌ No | Contains secrets |
+| `.venv/` | ❌ No | Virtual environment (reproducible) |
+
+---
+
+## 8. Dataset Schema
+
+Each line in `data/samples/passages.jsonl` is a valid JSON object representing one benchmark passage.
+
+### Required fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `story_id` | string | Stable story identifier. Alphanumeric, dashes, underscores only. Example: `STORY-001` |
+| `passage_id` | string | Unique passage identifier across the whole dataset. Example: `STORY-001-P01` |
+| `category` | string | Linguistic phenomenon. Must be one of the 16 supported values (see below). |
+| `english` | string | Exact English source passage. Must not be empty. |
+
+### Optional fields
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `story_context` | string or null | null | Surrounding narrative context for the translator |
+| `character_names` | list of strings | `[]` | Characters appearing in the passage |
+| `glossary` | dict | `{}` | Approved names and term meanings |
+| `reference_twi` | string or null | null | Human-reviewed Asante Twi reference translation |
+| `reference_status` | string | `"absent"` | `absent`, `drafted`, or `human_reviewed` |
+| `review_status` | string | `"pending"` | `pending`, `in_review`, `approved`, or `rejected` |
+| `source_metadata` | dict | `{}` | Author, license, creation date, and provenance notes |
+
+### Consistency rules
+
+- `reference_status: "human_reviewed"` requires a non-empty `reference_twi`.
+- `reference_status: "absent"` requires `reference_twi` to be null or empty.
+- `passage_id` must be unique across the entire dataset.
+
+### Supported linguistic categories
+
+```
+simple_sentence            pronouns_character_ref     dialogue
+multiple_characters        event_order_tense          cause_and_effect
+ambiguous_reference        idioms_figurative           cultural_context
+character_name_consistency  descriptions_relationships  child_friendly_vocabulary
+questions_and_commands      negation                   long_range_context
+completeness_boundaries
+```
+
+### Example passage record
+
+```json
+{
+  "story_id": "STORY-001",
+  "passage_id": "STORY-001-P01",
+  "category": "simple_sentence",
+  "english": "The sun rose slowly over the hills.",
+  "story_context": "Opening line of a morning story set in a small village.",
+  "character_names": [],
+  "glossary": {},
+  "reference_twi": null,
+  "reference_status": "absent",
+  "review_status": "pending",
+  "source_metadata": {
+    "author": "Original fixture",
+    "license": "CC-BY-4.0",
+    "created": "2026-10-21",
+    "is_dev_fixture": true
+  }
+}
+```
+
+---
+
+## 9. Adding a New Sample Passage
+
+1. Open `data/samples/passages.jsonl` in any text editor.
+2. Add one JSON object per line at the end of the file. Do not add commas between lines.
+3. Assign a unique `passage_id` following the pattern `STORY-NNN-PNN`.
+4. Choose a category from the 16 supported values.
+5. Leave `reference_twi` as `null` and `reference_status` as `"absent"` unless a qualified Asante Twi reviewer has approved the reference.
+6. Run validation to confirm the record is accepted:
+
+   ```bash
+   python -m twi_lab.dataset --validate
+   ```
+
+7. Update the `passage_count` and `categories` fields in `data/samples/manifest.json` to match the new totals.
+
+> **Do not invent Asante Twi translations.** Leave `reference_twi` empty until a qualified reviewer supplies and approves one.
+
+---
+
+## 10. Validating the Dataset
+
+### Basic validation
+
+```bash
+python -m twi_lab.dataset --validate
+```
+
+### Validate a specific file
+
+```bash
+python -m twi_lab.dataset --validate --dataset path/to/passages.jsonl
+```
+
+### Verbose output (includes raw error snippets)
+
+```bash
+python -m twi_lab.dataset --validate --verbose
+```
+
+### Exit codes
+
+| Code | Meaning |
+|------|---------|
+| `0` | All records valid |
+| `1` | Validation failed (invalid records, duplicates, or file not found) |
+| `2` | Configuration or argument error |
+
+### Example output
+
+```
+────────────────────────────────────────────────────────────
+  TWI TRANSLATION BENCHMARK — DATASET VALIDATION REPORT
+────────────────────────────────────────────────────────────
+  Status         : ✅ PASSED
+  Total records  : 25
+  Valid records  : 25
+  Invalid records: 0
+  Duplicate IDs  : 0
+
+  Category counts:
+    ambiguous_reference                        2
+    cause_and_effect                           2
+    character_name_consistency                 1
+    child_friendly_vocabulary                  1
+    completeness_boundaries                    1
+    cultural_context                           2
+    descriptions_relationships                 2
+    dialogue                                   3
+    event_order_tense                          1
+    idioms_figurative                          2
+    long_range_context                         1
+    multiple_characters                        1
+    negation                                   2
+    pronouns_character_ref                     2
+    questions_and_commands                     1
+    simple_sentence                            2
+────────────────────────────────────────────────────────────
+```
+
+---
+
+## 11. Running Tests
+
+Ensure the virtual environment is activated, then run:
+
+```bash
+pytest
+```
+
+Run with verbose output:
+
+```bash
+pytest -v
+```
+
+Run a specific test file:
+
+```bash
+pytest tests/test_schemas.py
+pytest tests/test_dataset.py
+pytest tests/test_config.py
+```
+
+Tests use temporary directories and files. They do not touch `data/samples/` and do not call any external API.
+
+---
+
+## 12. Current Limitations
+
+- **No translation occurs in Phase 1.** The engines are not implemented, configured, or called.
+- **No Asante Twi reference translations exist.** All passages have `reference_status: "absent"`. A qualified reviewer must supply references before quality metrics can be calculated.
+- **The sample dataset is a development fixture**, not a validated or representative linguistic benchmark. It covers 25 original passages across 16 categories but has not been reviewed for linguistic adequacy, balance, or difficulty calibration.
+- **No reviewer interface.** Human review is planned for Phase 4 as a hosted web application. The current architecture documentation is in `docs/deployment_architecture.md`.
+- **No automated metrics.** BLEU, chrF, and other automated metrics are Phase 5 additions.
+- **No experiment runner.** `ExperimentRun` and `TranslationResult` schemas are defined but not connected to execution logic.
+
+---
+
+## 13. What is Postponed to Phase 2
+
+| Feature | Phase |
+|---------|-------|
+| OPUS-MT model download and local inference | 2 |
+| Khaya API client and authentication | 2 |
+| Translation request/response adapters | 2 |
+| Engine error handling and retry logic | 2 |
+| TranslationResult persistence (writing to disk) | 2 |
+| Experiment runner CLI | 3 |
+| Context strategy implementation | 3 |
+| Hosted reviewer web interface | 4 |
+| Reviewer authentication | 4 |
+| Review submission and scoring | 4 |
+| BLEU, chrF, and other automated metrics | 5 |
+| Comparative analysis and reporting | 5 |
+
+---
+
+## 14. Quality and Research Principles
+
+These principles guide all phases of development:
+
+1. **Human-reviewed Asante Twi is the primary quality reference.** Automated metrics are supplementary.
+2. **Engine names are hidden during human comparison** (Phase 4). Reviewers evaluate blind.
+3. **Context strategies are compared experimentally.** More context is not automatically better.
+4. **Fair comparisons use the same source passages and comparable settings** for all engines.
+5. **Critical meaning errors are tracked separately** from average quality scores.
+6. **Quality, speed, cost, reliability, and editing effort are reported separately.**
+7. **Model versions and experiment configurations are stored** for reproducibility.
+8. **Source English passages are never modified** after they are added to the dataset.
+9. **Data provenance and permissions are recorded** in `source_metadata`.
+10. **No engine is declared better before the evaluation supports that conclusion.**

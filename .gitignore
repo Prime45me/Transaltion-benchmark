@@ -1,0 +1,49 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment secrets (never commit actual API keys or credentials)
+.env
+.env.local
+*.env.*
+*.secret
+*.pem
+*.key
+*keys*.txt
+khaya-api-keys.txt
+
+# Testing and linting caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Benchmark run results and logs (transient/generated evaluation artifacts)
+# Note: Benchmark data in data/samples/ and human references in data/references/
+# are trackable assets and are intentionally NOT ignored.
+results/*
+!results/.gitkeep
+logs/
+*.log
+
+# Model artifacts and checkpoints (for Phase 2 local models)
+models/
+*.bin
+*.safetensors
+*.onnx
+*.pt
+
+# Operating System and IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

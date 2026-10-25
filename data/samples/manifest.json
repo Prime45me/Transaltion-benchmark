@@ -1,0 +1,32 @@
+{
+  "title": "Twi Translation Benchmark Lab — Development Sample Dataset",
+  "version": "0.1.0",
+  "description": "Original English passage fixtures for evaluating English-to-Asante Twi translation engines on children's story content. Covers 16 linguistic categories across 8 mini-stories.",
+  "license": "CC-BY-4.0",
+  "language_source": "en",
+  "language_target": "ak-twi",
+  "domain": "children_stories",
+  "passage_count": 25,
+  "story_count": 8,
+  "categories": {
+    "simple_sentence": 2,
+    "pronouns_character_ref": 2,
+    "dialogue": 3,
+    "multiple_characters": 1,
+    "event_order_tense": 1,
+    "cause_and_effect": 2,
+    "ambiguous_reference": 2,
+    "idioms_figurative": 2,
+    "cultural_context": 2,
+    "character_name_consistency": 1,
+    "descriptions_relationships": 2,
+    "child_friendly_vocabulary": 1,
+    "questions_and_commands": 1,
+    "negation": 2,
+    "long_range_context": 1,
+    "completeness_boundaries": 1
+  },
+  "created_date": "2026-10-21",
+  "notes": "Development fixture only. All passages are original compositions and are NOT a validated or representative linguistic benchmark. No Asante Twi reference translations have been provided; all reference_status values are 'absent'. Qualified Asante Twi reviewers must supply and approve references before these passages can be used as ground truth. Five multi-passage stories (STORY-001 through STORY-002, STORY-005 through STORY-008) allow Phase 3 experiments to test narrative consistency across passages within a single story. Category distribution is intentional but not exhaustive; additional passages should be added before any comparative study is published.",
+  "is_development_fixture": true
+}

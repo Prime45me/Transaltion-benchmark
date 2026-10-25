@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "description": "Human-authored narrative summaries for Twi Translation Benchmark Lab stories.",
+  "summaries": {
+    "STORY-001": "Ama wakes up in her village, asks her grandmother Nana Adwoa for breakfast, eats warm porridge, and heads outside to play with friends.",
+    "STORY-002": "Kofi, Abena, and Kweku wait under a mango tree for their father, who arrives late from the market along muddy paths with a surprise sack of gifts.",
+    "STORY-003": "Maame Efua, an elder great-aunt, walks peacefully through the village on market day, paying respects at the chief's palace.",
+    "STORY-004": "In a village classroom, teacher Mr. Asante asks about the river's origin and gently encourages shy students not to fear making mistakes.",
+    "STORY-005": "Nine-year-old Kweku recalls the memorable childhood morning when a wandering goat chewed through his school notebook pages while he fetched water.",
+    "STORY-006": "At a wide, chilly riverbank, young Yaa recoils from the cold water while her older cousin Esi teasingly compares her to a cat avoiding wet paws.",
+    "STORY-007": "On Friday evening under the sacred odum tree, the village chief and elders gather to resolve community disputes and discuss serious affairs.",
+    "STORY-008": "Eight-year-old Adwoa shares her handmade doll, wearing an orange dress and beads, with her four-year-old sister Akua at bedtime."
+  }
+}
